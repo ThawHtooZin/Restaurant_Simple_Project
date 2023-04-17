@@ -19,57 +19,43 @@
 <div class="content">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-lg-6">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-
-            <p class="card-text">
-              Some quick example text to build on the card title and make up the bulk of the card's
-              content.
-            </p>
-
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
-          </div>
-        </div>
-
-        <div class="card card-primary card-outline">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-
-            <p class="card-text">
-              Some quick example text to build on the card title and make up the bulk of the card's
-              content.
-            </p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
-          </div>
-        </div><!-- /.card -->
-      </div>
-      <!-- /.col-md-6 -->
-      <div class="col-lg-6">
+      <div class="col">
         <div class="card">
           <div class="card-header">
-            <h5 class="m-0">Featured</h5>
+            <h3 class="card-title">Dishes</h3>
+              <a href="/dish/create" class="btn btn-success" style="float:right;">Create</a>
           </div>
+
           <div class="card-body">
-            <h6 class="card-title">Special title treatment</h6>
-
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
-
-        <div class="card card-primary card-outline">
-          <div class="card-header">
-            <h5 class="m-0">Featured</h5>
-          </div>
-          <div class="card-body">
-            <h6 class="card-title">Special title treatment</h6>
-
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            @if(session('message'))
+              <div class="alert alert-success">
+                {{ session('message') }}
+              </div>
+            @endif
+            <table id="dishes" class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>Dish Name</th>
+                  <th>Table Number</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($orders as $order)
+                  <tr>
+                    <td>{{$order->dish->name}}</td>
+                    <td>{{$order->table_id}}</td>
+                    <td>{{$status[$order->status]}}</td>
+                    <td>
+                      <a href="/order/{{$order->id}}/approve" class="btn btn-warning">Approve</a>
+                      <a href="/order/{{$order->id}}/cancel" class="btn btn-danger">Cancel</a>
+                      <a href="/order/{{$order->id}}/ready" class="btn btn-success">Ready</a>
+                    </td>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -84,3 +70,16 @@
 <!-- /.content-wrapper -->
 
 @endsection
+<script src="plugins/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  $('#dishes').DataTable({
+    "paging":true,
+    "pageLength":4,
+    "lengthChanging":false,
+    "ordering":true,
+    "info":true,
+    "searching":false,
+  })
+});
+</script>
